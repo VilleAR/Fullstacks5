@@ -7,12 +7,23 @@ loginRouter.post('/', async (request, response) => {
   console.log('login request')
   console.log(request.body)
   const body = request.body
+  console.log('username', body.username)
 
   const user = await User.findOne({ username: body.username })
-  const passwordCorrect = user === null ?
-    false :
-    await bcrypt.compare(body.password, user.passwordHash)
-
+  console.log('user:',user)
+  // const passwordCorrect = user === null ?
+  //   false :
+  //   await bcrypt.compare(body.password, user.password)
+  if (body.password === user.password) {
+    passwordCorrect = true;
+  } else {
+    passwordCorrect = false;
+  }
+  console.log(passwordCorrect)
+  
+  console.log(body.password)
+  console.log(user.password)
+  
   if (!(user && passwordCorrect)) {
     return response.status(401).send({ error: 'invalid username or password' })
   }
@@ -23,7 +34,7 @@ loginRouter.post('/', async (request, response) => {
   }
 
   const token = jwt.sign(userForToken, process.env.SECRET)
-
+  
   response.status(200).send({ token, username: user.username, name: user.name })
 })
 

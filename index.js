@@ -25,7 +25,6 @@ app.use(cors())
 app.use(bodyParser.json())
 
 mongoose.connect(config.mongoUrl)
-mongoose.Promise = global.Promise
 
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
